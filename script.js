@@ -5,18 +5,27 @@ let columnNbrSec = document.querySelector(".column-number-section");
 let cellSec = document.querySelector(".cell-section");
 let dataObj = {};
 let formulaSection = document.querySelector(".formula-input-section")
+let body = document.querySelector("body");
+let allAlignmentOptions = document.querySelectorAll(".alignment span")
+let fileBtn = document.querySelector(".file");
+let bgColor = document.querySelectorAll(".color-options span")[0];
+let textColor = document.querySelectorAll(".color-options span")[1];
+let fontFamilyBtn = document.querySelector(".font-family");
+let fontSizeBtn = document.querySelector(".font-size");
+let fileName = document.querySelector(".title");
+let openFileBtn = document.querySelector(".load-file");
 
 formulaSection.addEventListener("keypress", function(e){
-
+    
     if(e.key == "Enter")
     {  
         if(!lastCellSelected)
         return;
-
+        
         let currCellAddress = lastCellSelected.getAttribute(`data-address`)
         let currCellObj = dataObj[currCellAddress];
         let newFormula = e.currentTarget.value;
-
+        
         if(newFormula == "")
         return;
         
@@ -122,26 +131,12 @@ for (let i = 1; i <= 100; i++) {
             bgColor: "white",
             isBold: false,
             isItalic: false,
-            isUnderline: false
+            isUnderline: false,
+            fontFamily : "Montserrat",
+            fontSize : 12,
 
         }
         dataObj[cellAddress] = obj;
-
-        cellDiv.addEventListener("keypress", function(e){
-            console.log(e.keyCode);
-
-            if(e.keyCode == 9)
-            {
-                if (lastCellSelected) {
-                    lastCellSelected.classList.remove("cell-selected");
-                }
-                e.currentTarget.classList.add("cell-selected");
-                lastCellSelected = e.currentTarget;
-    
-                selectedCellDiv.innerText = e.currentTarget.getAttribute("data-address");
-            }
-
-        })
 
         cellDiv.addEventListener("click", function (e) {
             if (lastCellSelected) {
@@ -150,8 +145,11 @@ for (let i = 1; i <= 100; i++) {
             e.currentTarget.classList.add("cell-selected");
             lastCellSelected = e.currentTarget;
 
+            let cellObj = dataObj[e.currentTarget.getAttribute("data-address")];
+            fontFamilyBtn.value = cellObj.fontFamily;
+            fontSizeBtn.value = cellObj.fontSize;
+            
             selectedCellDiv.innerText = e.currentTarget.getAttribute("data-address");
-
         })
 
         rowDiv.append(cellDiv);
@@ -210,3 +208,75 @@ function updateCell(cell)
 function addToDownstream(parentCell, childCell) {
   dataObj[parentCell].downstream.push(childCell);   
 }
+
+openFileBtn.addEventListener("click", function(){
+    
+    let isFileDivPresent = document.querySelector(".saved-files");
+    if(isFileDivPresent)
+    {
+        isFileDivPresent.remove();
+        return;
+    }
+    
+    let localStorageItems = Object.keys(localStorage)
+    
+    if(localStorageItems.length > 0)
+    {
+    let selectSheetDiv = document.createElement("div");
+    selectSheetDiv.classList.add("saved-files");
+    
+    for(let i = 0; i < localStorageItems.length; i++)
+    {
+        let name = localStorageItems[i];
+        let fileDiv = document.createElement("div");
+        fileDiv.classList.add("single-file-div");
+        fileDiv.innerText = name;
+        
+        fileDiv.addEventListener("click", function(e){
+            loadSheet(e.currentTarget.innerText);
+            selectSheetDiv.remove();
+            
+        })  
+        selectSheetDiv.append(fileDiv);
+    }
+    
+    body.append(selectSheetDiv);
+    }
+    
+    function loadSheet(sheetName)
+    {
+        fileName.innerText = sheetName;
+        let sheet = localStorage.getItem(sheetName);
+        sheet = JSON.parse(sheet);
+        dataObj = sheet;
+    
+        for(let cell in dataObj)
+        {
+            let cellDiv = document.querySelector(`[data-address = ${cell}]`);
+    
+            let value = dataObj[cell].value;
+            let alignment = dataObj[cell].align;
+            let bgColor = dataObj[cell].bgColor;
+            let fontColor = dataObj[cell].color;
+            let isBold = dataObj[cell].isBold;
+            let isItalic = dataObj[cell].isItalic;
+            let isUnderline = dataObj[cell].isUnderline;
+            let fontFam = dataObj[cell].fontFamily;
+            let fontS = dataObj[cell].fontSize;
+    
+            if(value)
+            cellDiv.innerText = value;
+            cellDiv.style.fontFamily = fontFam;
+            cellDiv.style.fontSize = `${Number(fontS)}px`;
+            cellDiv.style.color = fontColor;
+            cellDiv.style.backgroundColor = bgColor;
+            if(isUnderline)
+            cellDiv.style.textDecoration = "underline";
+            if(isItalic)
+            cellDiv.style.fontStyle = "italic";
+            if(isBold)
+            cellDiv.style.fontWeight = "bold";
+            cellDiv.style.textAlign = alignment;
+        }
+    }
+})
