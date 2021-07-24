@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+        body{
+            margin: 0;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container{
+            height: 20rem;
+            width: 20rem;
+            border: 1px solid;
+            display: flex;
+            /* position: fixed;
+            top: 50vh;
+            left: 50vw;
+            transform: translateX(-50%, -50%); */
+        }
+        .container div{
+            height: 10rem;
+            width: 10rem;
+            border: 5px solid;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div style="position: fixed;top:calc( ( 100vh - 20rem ) / 2 ); background-color: blue;"></div>
+        <div style="position: fixed;top:calc( ( 100vh - 20rem ) / 2 + 5rem); left: calc( ( 100vw - 20rem ) / 2 + 5rem ); background-color: red;"></div>
+        <div style="position: fixed;top:calc( ( 100vh - 20rem ) / 2 + 10rem); left: calc( ( 100vw - 20rem ) / 2 + 10rem); background-color:green;"></div>
+    </div>
+    
+</body>
+</html>
