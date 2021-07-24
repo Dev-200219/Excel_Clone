@@ -33,8 +33,12 @@ body{
     background-color: white;
 }
 
-.file,.help,.load-file{
+.file,.help,.load-file, .download{
     margin-left: 2rem;
+}
+
+.file:hover,.help:hover,.load-file:hover, .download:hover{
+    background-color: #3498db;
 }
 
 
@@ -139,8 +143,7 @@ body{
 .cell{
     height: 30px;
     width: 80px;
-    border-right: 1px solid gray;
-    border-bottom: 1px solid gray;
+    border: 1px solid gray;
     flex-shrink: 0;
     overflow: auto;
     outline: none;
@@ -211,6 +214,7 @@ body{
     text-align: center;
     border: 0.5px solid;
     background-color: white;
+    display: none;
 }
 
 .saved-files{
@@ -223,5 +227,9 @@ body{
     height: 25rem;
     width: 25rem;
     padding: 5px;
+    background-color: #ecf0f1;
+}
+
+.bold-italic-under span:hover, .alignment span:hover, .selected{
     background-color: #ecf0f1;
 }

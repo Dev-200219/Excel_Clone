@@ -6,22 +6,15 @@ for(let i = 0; i < fontSize.length; i++)
     let newHTML = oldHTML + `<option>${fontSize[i]}</option>`;
     fontSizeBtn.innerHTML = newHTML;
 }
-
 fontSizeBtn.value = 12;
 
-
-fonts = ["Sans-Serif", "Arial", "Roboto", "Times New Roman", "Segoe UI", "Courier New"];
+fonts = ["Sans-Serif", "Arial", "Roboto", "Times New Roman", "Segoe UI", "Courier New", "Arial Black", "Calibri", "Cambria", "Candara", "Comic Sans MS", "Constantia", "Verdana"];
 for(let i = 0; i < fonts.length; i++)
 {
     let oldHTML = fontFamilyBtn.innerHTML;
     let newHTML = oldHTML + `<option>${fonts[i]}</option>`;
     fontFamilyBtn.innerHTML = newHTML;
 }
-
-let leftAlign = allAlignmentOptions[0];
-let centerAlign = allAlignmentOptions[1];
-let rightAlign = allAlignmentOptions[2];
-let lastAlignSelected = "left";
 
 leftAlign.addEventListener("click", function(e){
 
@@ -30,6 +23,10 @@ leftAlign.addEventListener("click", function(e){
         lastCellSelected.style.textAlign = "left";
         let address = lastCellSelected.getAttribute("data-address");
         dataObj[address].align = "left";
+
+        leftAlign.classList.add("selected");
+        rightAlign.classList.remove("selected");
+        centerAlign.classList.remove("selected");
     }
 })
 
@@ -40,6 +37,10 @@ centerAlign.addEventListener("click", function(e){
         let address = lastCellSelected.getAttribute("data-address");
         dataObj[address].align = "center";
         lastCellSelected.style.textAlign = "center";
+
+        leftAlign.classList.remove("selected");
+        rightAlign.classList.remove("selected");
+        centerAlign.classList.add("selected");
     }
 })
 
@@ -50,12 +51,12 @@ rightAlign.addEventListener("click", function(e){
         let address = lastCellSelected.getAttribute("data-address");
         dataObj[address].align = "right";
         lastCellSelected.style.textAlign = "right";
+
+        leftAlign.classList.remove("selected");
+        rightAlign.classList.add("selected");
+        centerAlign.classList.remove("selected");
     }
 })
-
-let bold = document.querySelectorAll(".bold-italic-under span")[0];
-let italic = document.querySelectorAll(".bold-italic-under span")[1];
-let underline = document.querySelectorAll(".bold-italic-under span")[2];
 
 bold.addEventListener("click", function(){
     if(lastCellSelected)
@@ -66,11 +67,13 @@ bold.addEventListener("click", function(){
         {
             dataObj[address].isBold = true;
             lastCellSelected.style.fontWeight = "bold";
+            bold.classList.add("selected");
         }
         else
         {
             dataObj[address].isBold = false;
             lastCellSelected.style.fontWeight = "";
+            bold.classList.remove("selected");
         }
     }
 })
@@ -84,11 +87,13 @@ italic.addEventListener("click", function(){
         {
             dataObj[address].isItalic = true;
             lastCellSelected.style.fontStyle = "italic";
+            italic.classList.add("selected");
         }
         else
         {
             dataObj[address].isItalic = false;
             lastCellSelected.style.fontStyle = "";
+            italic.classList.remove("selected");
         }
     }
 })
@@ -101,11 +106,13 @@ underline.addEventListener("click", function(){
         {
             dataObj[address].isUnderline = true;
             lastCellSelected.style.textDecoration = "underline";
+            underline.classList.add("selected");
         }
         else
         {
             dataObj[address].isUnderline = false;
             lastCellSelected.style.textDecoration = "";
+            underline.classList.remove("selected");
         }
     }
 })
@@ -118,30 +125,24 @@ fileBtn.addEventListener("click", function(){
     {
         let dropdown = document.querySelector(".dropdown");
         fileBtn.setAttribute("data-open", "false");
-        dropdown.remove();
+        dropdown.style.display = "none";
     }
     else
     {
         fileBtn.setAttribute("data-open", "true");
-        let dropdownMenu = document.createElement("div");
-        dropdownMenu.innerHTML = "<p>Save</p><p>Clear</p>"
-        dropdownMenu.classList.add("dropdown")
-        body.append(dropdownMenu);
+        let dropdownMenu = document.querySelector(".dropdown");
+        dropdownMenu.style.display = "block";
         
         let saveBtn = document.querySelectorAll(".dropdown p")[0];
         saveBtn.addEventListener("click", function(){
             let sheetName = document.querySelector(".title").innerText;
             localStorage.setItem(`${sheetName}`, JSON.stringify(dataObj));
-            fileBtn.setAttribute("data-open", "false");
-            dropdownMenu.remove();
         })
 
         let clearBtn = document.querySelectorAll(".dropdown p")[1];
         clearBtn.addEventListener("click", function(){
             let sheetName = document.querySelector(".title").innerText;
             localStorage.removeItem(`${sheetName}`);
-            fileBtn.setAttribute("data-open", "false");
-            dropdownMenu.remove();
         })
     }
 })
@@ -196,4 +197,16 @@ fontSizeBtn.addEventListener("change", function(e){
         dataObj[address].fontSize = e.currentTarget.value;
         lastCellSelected.style.fontSize = `${Number(e.currentTarget.value)}px`;
     }
+})
+
+downloadBtn.addEventListener("click", function(){
+    
+    let sheetName = document.querySelector(".title").innerText;
+    let blob = new Blob([JSON.stringify(dataObj, null, 2)],{type:"application/json"});
+    let url = URL.createObjectURL(blob);
+
+    let downloadLink = document.createElement("a");
+    downloadLink.href = url;
+    downloadLink.download = `${sheetName}`;
+    downloadLink.click();
 })

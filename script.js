@@ -14,6 +14,13 @@ let fontFamilyBtn = document.querySelector(".font-family");
 let fontSizeBtn = document.querySelector(".font-size");
 let fileName = document.querySelector(".title");
 let openFileBtn = document.querySelector(".load-file");
+let bold = document.querySelectorAll(".bold-italic-under span")[0];
+let italic = document.querySelectorAll(".bold-italic-under span")[1];
+let underline = document.querySelectorAll(".bold-italic-under span")[2];
+let leftAlign = allAlignmentOptions[0];
+let centerAlign = allAlignmentOptions[1];
+let rightAlign = allAlignmentOptions[2];
+let downloadBtn = document.querySelector(".download");
 
 formulaSection.addEventListener("keypress", function(e){
     
@@ -148,6 +155,42 @@ for (let i = 1; i <= 100; i++) {
             let cellObj = dataObj[e.currentTarget.getAttribute("data-address")];
             fontFamilyBtn.value = cellObj.fontFamily;
             fontSizeBtn.value = cellObj.fontSize;
+
+            if(cellObj.isBold)
+            bold.classList.add("selected");
+            else
+            bold.classList.remove("selected");
+
+            if(cellObj.isItalic)
+            italic.classList.add("selected")
+            else
+            italic.classList.remove("selected");
+
+            if(cellObj.isUnderline)
+            underline.classList.add("selected");
+            else
+            underline.classList.remove("selected");
+
+            if(cellObj.align == "left")
+            {
+                leftAlign.classList.add("selected");
+                rightAlign.classList.remove("selected");
+                centerAlign.classList.remove("selected");
+            }
+            else if(cellObj.align == "right")
+            {
+                leftAlign.classList.remove("selected");
+                centerAlign.classList.remove("selected");
+                rightAlign.classList.add("selected");
+            }
+            else
+            {
+                leftAlign.classList.remove("selected");
+                centerAlign.classList.add("selected");
+                rightAlign.classList.remove("selected");
+            }
+
+
             
             selectedCellDiv.innerText = e.currentTarget.getAttribute("data-address");
         })
@@ -217,7 +260,7 @@ openFileBtn.addEventListener("click", function(){
         isFileDivPresent.remove();
         return;
     }
-    
+
     let localStorageItems = Object.keys(localStorage)
     
     if(localStorageItems.length > 0)
@@ -280,3 +323,7 @@ openFileBtn.addEventListener("click", function(){
         }
     }
 })
+
+// let fileUpload = document.createElement("input");
+// fileUpload.setAttribute("type", "file");
+// body.append(fileUpload);
