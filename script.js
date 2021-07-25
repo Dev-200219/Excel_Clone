@@ -263,11 +263,11 @@ openFileBtn.addEventListener("click", function(){
 
     let localStorageItems = Object.keys(localStorage)
     
-    if(localStorageItems.length > 0)
-    {
     let selectSheetDiv = document.createElement("div");
     selectSheetDiv.classList.add("saved-files");
-    
+
+    if(localStorageItems.length > 0)
+    {
     for(let i = 0; i < localStorageItems.length; i++)
     {
         let name = localStorageItems[i];
@@ -281,10 +281,12 @@ openFileBtn.addEventListener("click", function(){
             
         })  
         selectSheetDiv.append(fileDiv);
+    }   
     }
-    
+    else{
+        selectSheetDiv.innerText = "No Saved Files Present!!!"
+    }
     body.append(selectSheetDiv);
-    }
     
     function loadSheet(sheetName)
     {
@@ -323,7 +325,3 @@ openFileBtn.addEventListener("click", function(){
         }
     }
 })
-
-// let fileUpload = document.createElement("input");
-// fileUpload.setAttribute("type", "file");
-// body.append(fileUpload);
